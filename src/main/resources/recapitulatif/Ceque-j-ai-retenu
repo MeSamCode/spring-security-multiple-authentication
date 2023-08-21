@@ -1,0 +1,38 @@
+Ce projet m'a permis d'apprendre l'authentification multiple avec spring security
+
+1-Apres avoir cree le projet je l'ai teste sans aucune configuration particuliere.J'ai donc teste avec le user par defaut et le
+randomized passwor de spring security .Tout s'etait bien passe.
+
+2-Ensuite j'ai ajoute les entities AppUser et Authority(qui sont generales pour l'application) avec les relations entre elles.
+Il faut noter pour les relations @ManyToMany ,une attention particuliere est requise pour ne pas se tromper de la partie ou
+mettre le FectType>EAGER et le mappedBy.
+Le fetchType.EAGER permet de charger directements toutes les authorities disponibles pour un User.Donc c'est mis du cote de
+l'entity AppUser.
+Lorsqu'il s'agit d'une relation ManyToMany entre deux entités, il y a souvent un concept d'entité "Owner" et
+d'entité "Inverse" (ou "Target"). Le "Owner" est l'entité qui détient la relation principale et à partir de
+laquelle la relation est généralement créée ou gérée.
+ L'"Inverse" (ou "Target") est l'entité qui est associée au "Owner" via la relation ManyToMany.
+ Le mappedBy doit etre placer du cote du Target pour la coherence du mapping.
+ Ainsi le mappedBy est mis dans notre cas du cote de l'entity Authority.
+
+3-Creation des wrappers SecurityUser(implementant le UserDetails )  et SecurityAuthority(implementant le GrantedAuthority)
+respectivement de AppUser et de Authority.
+
+4-Implementation de UserDetailsService;
+
+5-Test reussi de l'authentication par username et password customise
+
+6-Implementation de APIKeyAthentiation,APIKeyAthentiationProvider,CustomAuthenticationManager,APIKeyAthentiationFilter,
+
+7-Test non reuissi d'authentification par l'un ou l'autre des deux methodes.
+En premier lieu,
+8-Il fallait bien configurer le WebSecurityConfig en ajoutant le HttpBasic et autres..
+
+9-Le point qui m'a pousse a ecrire ce recapitulatif est cellui-ci:
+Quand on cree un AuthenticationManager,il faut founir des AuthenticationProvider pour chaque type d'authentification.
+Ainsi sans creer le UsernamePasswordAuthenticationProvider ,l'authentification par username et password n'allait plus
+fonctionner.
+Aussi faut-il remarquer qu'on a pas itere nous meme sur ce provider parcequ'il est pour la classe
+UsernamePasswordAuthenticationToken qui est native a spring security.Par contre on a itere sur le provider destine a
+la classe d'authentAuthentication customise APIKeyAuthentication.
+
